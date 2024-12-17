@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from ua_parser import user_agent_parser
+from ua_parser import parser
 from .compat import string_types
 
 
@@ -140,11 +140,11 @@ def parse_device(family, brand, model):
 class UserAgent(object):
 
     def __init__(self, user_agent_string):
-        ua_dict = user_agent_parser.Parse(user_agent_string)
+        ua = parser.parse(user_agent_string).with_defaults()
         self.ua_string = user_agent_string
-        self.os = parse_operating_system(**ua_dict['os'])
-        self.browser = parse_browser(**ua_dict['user_agent'])
-        self.device = parse_device(**ua_dict['device'])
+        self.os = parse_operating_system(ua.os.family, ua.os.major, ua.os.minor, ua.os.patch)
+        self.browser = parse_browser(ua.user_agent.family, ua.user_agent.major, ua.user_agent.minor, ua.user_agent.patch)
+        self.device = parse_device(ua.device.family, ua.device.brand, ua.device.model)
 
     def __str__(self):
         return "{device} / {os} / {browser}".format(
