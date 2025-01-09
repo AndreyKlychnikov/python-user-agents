@@ -1,7 +1,6 @@
 from collections import namedtuple
 
 from ua_parser import parser
-from .compat import string_types
 
 
 MOBILE_DEVICE_FAMILIES = (
@@ -93,7 +92,7 @@ EMAIL_PROGRAM_FAMILIES = set((
 ))
 
 def verify_attribute(attribute):
-    if isinstance(attribute, string_types) and attribute.isdigit():
+    if isinstance(attribute, str) and attribute.isdigit():
         return int(attribute)
 
     return attribute
@@ -152,9 +151,6 @@ class UserAgent(object):
             os=self.get_os(),
             browser=self.get_browser()
         )
-
-    def __unicode__(self):
-        return unicode(str(self))
 
     def _is_android_tablet(self):
         # Newer Android tablets don't have "Mobile" in their user agent string,
